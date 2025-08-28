@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Class Representative Election</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f9;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 700px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .candidate {
+      margin: 10px 0;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      display: block;
+      width: 100%;
+      font-size: 16px;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .results {
+      margin-top: 20px;
+      padding: 15px;
+      background: #f0f0f0;
+      border-radius: 8px;
+    }
+    .bar {
+      height: 20px;
+      background: #007BFF;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Class Representative Election</h1>
+    <form id="voteForm">
+      <p>Please select your candidate:</p>
+      
+      <!-- Candidates -->
+      <div class="candidate"><input type="radio" name="candidate" value="Candidate 1"> Aakriti</div>
+      <div class="candidate"><input type="radio" name="candidate" value="Candidate 2"> Subhadeep</div>
+      <div class="candidate"><input type="radio" name="candidate" value="Candidate 3"> Shailendra</div>
+      <div class="candidate"><input type="radio" name="candidate" value="Candidate 4"> Palak Rajput</div>
+      <div class="candidate"><input type="radio" name="candidate" value="Candidate 5"> Rahul</div>
+      <div class="candidate"><input type="radio" name="candidate" value="Candidate 6"> Veeraswamy</div>
+      <div class="candidate"><input type="radio" name="candidate" value="Candidate 7"> Deepa</div>
+      <div class="candidate"><input type="radio" name="candidate" value="Candidate 8"> Shanvi</div>
+      <div class="candidate"><input type="radio" name="candidate" value="Candidate 9"> Payal</div>
+      <div class="candidate"><input type="radio" name="candidate" value="Candidate 10"> Pawanya</div>
+      
+      <button type="submit">Submit Vote</button>
+    </form>
+    
+    <div id="results" class="results" style="display:none;">
+      <h2>Live Results</h2>
+      <div id="resultList"></div>
+    </div>
+  </div>
+
+  <script>
+    const voteForm = document.getElementById("voteForm");
+    const resultsDiv = document.getElementById("results");
+    const resultList = document.getElementById("resultList");
+
+    // Load votes from localStorage or start fresh
+    let votes = JSON.parse(localStorage.getItem("votes")) || {
+      "Candidate 1": 0, "Candidate 2": 0, "Candidate 3": 0,
+      "Candidate 4": 0, "Candidate 5": 0, "Candidate 6": 0,
+      "Candidate 7": 0, "Candidate 8": 0, "Candidate 9": 0,
+      "Candidate 10": 0
+    };
+
+    // Function to display results
+    function showResults() {
+      resultsDiv.style.display = "block";
+      resultList.innerHTML = "";
+
+      const totalVotes = Object.values(votes).reduce((a,b) => a+b, 0);
+
+      for (let candidate in votes) {
+        const percent = totalVotes ? ((votes[candidate] / totalVotes) * 100).toFixed(1) : 0;
+        resultList.innerHTML += `
+          <p>${candidate}: ${votes[candidate]} votes (${percent}%)</p>
+          <div class="bar" style="width:${percent}%;"></div>
+        `;
+      }
+    }
+
+    // Show existing results on page load
+    showResults();
+
+    // Handle voting
+    voteForm.addEventListener("submit", function(event) {
+      event.preventDefault();
+      const selected = document.querySelector('input[name="candidate"]:checked');
+      
+      if (selected) {
+        votes[selected.value]++;
+
+        // Save to localStorage
+        localStorage.setItem("votes", JSON.stringify(votes));
+
+        // Show updated results
+        showResults();
+      } else {
+        alert("Please select a candidate before voting!");
+      }
+    });
+  </script>
+</body>
+</html>
